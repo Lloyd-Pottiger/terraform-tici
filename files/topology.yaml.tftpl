@@ -1,0 +1,68 @@
+global:
+  user: "tidb"
+  ssh_port: 22
+  deploy_dir: "/tidb-deploy"
+
+server_configs:
+  cdc:
+    newarch: true
+
+component_versions:
+  tidb: v9.0.0-feature.fts
+  tiflash: v9.0.0-feature.fts
+  tici_meta: nightly
+  tici_worker: nightly
+
+tidb_servers:
+  %{~ for host in tidb_hosts ~}
+  - host: ${host}
+  %{~ endfor ~}
+
+tikv_servers:
+  %{~ for idx, host in tikv_hosts ~}
+  - host: ${host}
+    config:
+      server.labels: { host: "tikv${idx}" }
+  %{~ endfor ~}
+
+tiflash_servers:
+  %{~ for host in tiflash_hosts ~}
+  - host: ${host}
+    config:
+      tici.s3.endpoint: http://s3.${s3_region}.amazonaws.com
+      tici.s3.bucket: ${s3_bucket}
+      tici.s3.access-key: ${s3_access_key}
+      tici.s3.secret-key: ${s3_secret_key}
+      tici.s3.region: ${s3_region}
+  %{~ endfor ~}
+
+tici_meta_servers:
+  %{~ for host in tici_meta_hosts ~}
+  - host: ${host}
+    config:
+      s3.endpoint: http://s3.${s3_region}.amazonaws.com
+      s3.bucket: ${s3_bucket}
+      s3.access-key: ${s3_access_key}
+      s3.secret-key: ${s3_secret_key}
+      s3.region: ${s3_region}
+  %{~ endfor ~}
+
+tici_worker_servers:
+  %{~ for host in tici_worker_hosts ~}
+  - host: ${host}
+    config:
+      s3.endpoint: http://s3.${s3_region}.amazonaws.com
+      s3.bucket: ${s3_bucket}
+      s3.access-key: ${s3_access_key}
+      s3.secret-key: ${s3_secret_key}
+      s3.region: ${s3_region}
+  %{~ endfor ~}
+
+pd_servers:
+  - host: 172.31.8.1
+
+monitoring_servers:
+  - host: 172.31.8.1
+
+grafana_servers:
+  - host: 172.31.8.1
