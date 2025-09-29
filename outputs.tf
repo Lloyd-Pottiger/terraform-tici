@@ -26,6 +26,14 @@ output "private-ip-pd" {
   value = local.pd_private_ip
 }
 
+output "tici_meta_private_ips" {
+  value = local.tici_meta_private_ips
+}
+
+output "tici_worker_private_ips" {
+  value = local.tici_worker_private_ips
+}
+
 output "s3-bucket" {
   value = aws_s3_bucket.main.bucket
 }

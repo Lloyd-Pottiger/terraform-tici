@@ -28,11 +28,13 @@ resource "aws_key_pair" "master_key" {
 }
 
 locals {
-  pd_private_ip       = "172.31.8.1"
-  tidb_private_ips    = [for i in range(local.n_tidb) : "172.31.7.${i + 1}"]
-  tikv_private_ips    = [for i in range(local.n_tikv) : "172.31.6.${i + 1}"]
-  tiflash_private_ips = [for i in range(local.n_tiflash_write) : "172.31.9.${i + 1}"]
-  center_private_ip   = "172.31.1.1"
+  pd_private_ip           = "172.31.8.1"
+  tidb_private_ips        = [for i in range(local.n_tidb) : "172.31.7.${i + 1}"]
+  tikv_private_ips        = [for i in range(local.n_tikv) : "172.31.6.${i + 1}"]
+  tiflash_private_ips     = [for i in range(local.n_tiflash) : "172.31.9.${i + 1}"]
+  tici_meta_private_ips   = [for i in range(local.n_tici_meta) : "172.31.10.${i + 1}"]
+  tici_worker_private_ips = [for i in range(local.n_tici_worker) : "172.31.11.${i + 1}"]
+  center_private_ip       = "172.31.1.1"
 }
 
 resource "aws_instance" "tidb" {
@@ -115,7 +117,7 @@ resource "aws_instance" "tikv" {
 }
 
 resource "aws_instance" "tiflash" {
-  count = local.n_tiflash_write
+  count = local.n_tiflash
 
   ami                         = local.image
   instance_type               = local.tiflash_instance
@@ -135,7 +137,7 @@ resource "aws_instance" "tiflash" {
   }
 
   tags = {
-    Name = "${local.namespace}-tiflash-write-${count.index}"
+    Name = "${local.namespace}-tiflash-${count.index}"
   }
 
   user_data_base64 = data.cloudinit_config.common_server.rendered
@@ -164,4 +166,59 @@ resource "aws_instance" "center" {
   }
 
   user_data_base64 = data.cloudinit_config.center_server.rendered
+}
+
+resource "aws_instance" "tici_worker" {
+  count = local.n_tici_worker
+
+  ami                         = local.image
+  instance_type               = local.tici_worker_instance
+  key_name                    = aws_key_pair.master_key.id
+  vpc_security_group_ids      = [aws_security_group.ssh.id]
+  iam_instance_profile        = aws_iam_instance_profile.ec2_profile.name
+  subnet_id                   = aws_subnet.main.id
+  associate_public_ip_address = true
+  private_ip                  = local.tici_worker_private_ips[count.index]
+
+  root_block_device {
+    volume_size           = 100
+    delete_on_termination = true
+    volume_type           = "gp3"
+    iops                  = 3000
+    throughput            = 125
+  }
+
+  tags = {
+    Name = "${local.namespace}-tici-worker-${count.index}"
+  }
+
+  user_data_base64 = data.cloudinit_config.common_server.rendered
+}
+
+resource "aws_instance" "tici_meta" {
+  count = local.n_tici_meta
+
+  ami                         = local.image
+  instance_type               = local.tici_meta_instance
+  key_name                    = aws_key_pair.master_key.id
+  vpc_security_group_ids      = [aws_security_group.ssh.id]
+  iam_instance_profile        = aws_iam_instance_profile.ec2_profile.name
+  subnet_id                   = aws_subnet.main.id
+  associate_public_ip_address = true
+  private_ip                  = local.tici_meta_private_ips[count.index]
+
+  # tici_meta does not need a disk now.
+  # root_block_device {
+  #   volume_size           = 100
+  #   delete_on_termination = true
+  #   volume_type           = "gp3"
+  #   iops                  = 3000
+  #   throughput            = 125
+  # }
+
+  tags = {
+    Name = "${local.namespace}-tici-meta-${count.index}"
+  }
+
+  user_data_base64 = data.cloudinit_config.common_server.rendered
 }
