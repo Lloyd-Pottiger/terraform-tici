@@ -2,7 +2,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 4.53.0"
+      version = "~> 5.0"
     }
   }
 
@@ -143,31 +143,6 @@ resource "aws_instance" "tiflash" {
   user_data_base64 = data.cloudinit_config.common_server.rendered
 }
 
-resource "aws_instance" "center" {
-  ami                         = local.image
-  instance_type               = local.center_instance
-  key_name                    = aws_key_pair.master_key.id
-  vpc_security_group_ids      = [aws_security_group.ssh.id]
-  iam_instance_profile        = aws_iam_instance_profile.ec2_profile.name
-  subnet_id                   = aws_subnet.main.id
-  associate_public_ip_address = true
-  private_ip                  = local.center_private_ip
-
-  root_block_device {
-    volume_size           = 200
-    delete_on_termination = true
-    volume_type           = "gp3"
-    iops                  = 3000
-    throughput            = 125
-  }
-
-  tags = {
-    Name = "${local.namespace}-center"
-  }
-
-  user_data_base64 = data.cloudinit_config.center_server.rendered
-}
-
 resource "aws_instance" "tici_worker" {
   count = local.n_tici_worker
 
@@ -221,4 +196,29 @@ resource "aws_instance" "tici_meta" {
   }
 
   user_data_base64 = data.cloudinit_config.common_server.rendered
+}
+
+resource "aws_instance" "center" {
+  ami                         = local.image
+  instance_type               = local.center_instance
+  key_name                    = aws_key_pair.master_key.id
+  vpc_security_group_ids      = [aws_security_group.ssh.id]
+  iam_instance_profile        = aws_iam_instance_profile.ec2_profile.name
+  subnet_id                   = aws_subnet.main.id
+  associate_public_ip_address = true
+  private_ip                  = local.center_private_ip
+
+  root_block_device {
+    volume_size           = 200
+    delete_on_termination = true
+    volume_type           = "gp3"
+    iops                  = 3000
+    throughput            = 125
+  }
+
+  tags = {
+    Name = "${local.namespace}-center"
+  }
+
+  user_data_base64 = data.cloudinit_config.center_server.rendered
 }
