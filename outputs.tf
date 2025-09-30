@@ -10,6 +10,10 @@ output "url-grafana" {
   value = "http://${aws_instance.pd.public_ip}:3000"
 }
 
+output "public-DSN" {
+  value = "mysql://root@${aws_instance.center.public_ip}:4000"
+}
+
 output "private-ip-tidb" {
   value = local.tidb_private_ips
 }
