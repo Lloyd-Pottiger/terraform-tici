@@ -15,9 +15,10 @@ locals {
   tikv_instance        = "c5.2xlarge"
   pd_instance          = "c5.2xlarge"
   tiflash_instance     = "r5.2xlarge"
-  center_instance      = "c5.2xlarge"
+  cdc_instance         = "c5.2xlarge"
   tici_meta_instance   = "c5.2xlarge"
   tici_worker_instance = "c5.2xlarge"
+  center_instance      = "c5.2xlarge"
 
   master_ssh_key         = "./master_key"
   master_ssh_public      = "./master_key.pub"

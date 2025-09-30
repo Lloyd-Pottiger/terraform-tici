@@ -1,5 +1,5 @@
 output "ssh-center" {
-  value = "ssh ${local.username}@${aws_instance.center.public_ip}"
+  value = "ssh -R 8888:tiup.pingcap.net:8988 ${local.username}@${aws_instance.center.public_ip}"
 }
 
 output "url-tidb-dashboard" {
@@ -32,6 +32,10 @@ output "tici_meta_private_ips" {
 
 output "tici_worker_private_ips" {
   value = local.tici_worker_private_ips
+}
+
+output "cdc_private_ips" {
+  value = local.cdc_private_ips
 }
 
 output "s3-bucket" {

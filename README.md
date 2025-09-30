@@ -44,9 +44,10 @@ Customize the number of TiDB and TiKV VMs in [`locals_common.tf`](./locals_commo
 ```terraform
 locals {
   name      = "foo-benchmark"
-  n_tidb    = 1     # default 2
-  n_tikv    = 3     # default 3
-  n_tiflash = 0     # default 0
+  n_tidb    = 1     # default 1
+  n_tikv    = 1     # default 1
+  n_tiflash = 1     # default 1
+  n_cdc     = 1     # default 1
   n_tici_meta = 1   # default 1
   n_tici_worker = 1 # default 1
 }
@@ -61,20 +62,20 @@ terraform apply -auto-approve
 Terraform will output like this, which contains information you need to connect to VMs:
 
 ```plain
+cdc_private_ips = [
+  "172.31.12.1",
+]
 private-ip-pd = [
   "172.31.8.1",
 ]
 private-ip-tidb = [
   "172.31.7.1",
-  "172.31.7.2",
 ]
 private-ip-tiflash = [
     "172.31.9.1",
 ]
 private-ip-tikv = [
   "172.31.6.1",
-  "172.31.6.2",
-  "172.31.6.3",
 ]
 tici_meta_private_ips = [
   "172.31.10.1",
@@ -94,9 +95,11 @@ You can now connect to the center VM and deploy a TiDB cluster in these VMs:
 # ssh to the host
 `terraform output -raw ssh-center`
 
+tiup mirror set http://localhost:8888
+
 # The topology.yaml is already created for you
 tiup cluster:v1.16.2-feature.fts deploy tidb-test nightly ./topology.yaml --user ubuntu -i ~/.ssh/id_rsa --yes
-tiup cluster start tidb-test
+tiup cluster:v1.16.2-feature.fts start tidb-test
 ```
 
 ### 5. Connect to TiDB

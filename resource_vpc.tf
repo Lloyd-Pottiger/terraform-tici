@@ -44,7 +44,7 @@ resource "aws_security_group" "ssh" {
     self      = true
   }
   name_prefix = "intra-and-ssh-"
-  vpc_id = aws_vpc.main.id
+  vpc_id      = aws_vpc.main.id
 }
 
 resource "aws_security_group" "etcd" {
@@ -55,7 +55,7 @@ resource "aws_security_group" "etcd" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   name_prefix = "etcd-"
-  vpc_id = aws_vpc.main.id
+  vpc_id      = aws_vpc.main.id
 }
 
 resource "aws_security_group" "grafana" {
@@ -66,5 +66,16 @@ resource "aws_security_group" "grafana" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   name_prefix = "grafana-"
-  vpc_id = aws_vpc.main.id
+  vpc_id      = aws_vpc.main.id
+}
+
+resource "aws_security_group" "tidb" {
+  ingress {
+    from_port   = 4000
+    to_port     = 4000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  name_prefix = "tidb-"
+  vpc_id      = aws_vpc.main.id
 }

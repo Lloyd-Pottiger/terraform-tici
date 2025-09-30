@@ -34,6 +34,7 @@ locals {
                 tidb_hosts = local.tidb_private_ips,
                 tikv_hosts = local.tikv_private_ips,
                 tiflash_hosts = local.tiflash_private_ips,
+                cdc_hosts = local.cdc_private_ips,
                 tici_meta_hosts = local.tici_meta_private_ips,
                 tici_worker_hosts = local.tici_worker_private_ips,
                 s3_region = local.region,

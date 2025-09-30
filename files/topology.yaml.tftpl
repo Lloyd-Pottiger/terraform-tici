@@ -6,6 +6,10 @@ global:
 server_configs:
   cdc:
     newarch: true
+  pd:
+    replication.enable-placement-rules: true
+    replication.location-labels: ["host"]
+    replication.max-replica: 1
 
 component_versions:
   tidb: v9.0.0-feature.fts
@@ -23,6 +27,11 @@ tikv_servers:
   - host: ${host}
     config:
       server.labels: { host: "tikv${idx}" }
+  %{~ endfor ~}
+
+cdc_servers:
+  %{~ for host in cdc_hosts ~}
+  - host: ${host}
   %{~ endfor ~}
 
 tiflash_servers:
