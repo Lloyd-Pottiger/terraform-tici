@@ -95,7 +95,7 @@ You can now connect to the center VM and deploy a TiDB cluster in these VMs:
 `terraform output -raw ssh-center`
 
 # The topology.yaml is already created for you
-tiup cluster deploy tidb-test nightly ./topology.yaml --user ubuntu -i ~/.ssh/id_rsa --yes
+tiup cluster:v1.16.2-feature.fts deploy tidb-test nightly ./topology.yaml --user ubuntu -i ~/.ssh/id_rsa --yes
 tiup cluster start tidb-test
 ```
 
