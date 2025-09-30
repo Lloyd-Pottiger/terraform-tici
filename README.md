@@ -55,7 +55,6 @@ locals {
 ### 3. Create and start VMs
 
 ```shell
-```shell
 terraform apply -auto-approve
 ```
 
