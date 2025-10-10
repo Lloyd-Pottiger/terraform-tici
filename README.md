@@ -65,26 +65,25 @@ Terraform will output like this, which contains information you need to connect 
 cdc_private_ips = [
   "172.31.12.1",
 ]
-private-ip-pd = [
-  "172.31.8.1",
-]
+private-ip-pd = "172.31.8.1"
 private-ip-tidb = [
   "172.31.7.1",
 ]
 private-ip-tiflash = [
-    "172.31.9.1",
+  "172.31.9.1",
 ]
 private-ip-tikv = [
   "172.31.6.1",
 ]
+public-DSN = "mysql://root@<center_vm_ip>:4000"
+ssh-center = "ssh -R 8888:tiup.pingcap.net:8988 ubuntu@<center_vm_ip>"
 tici_meta_private_ips = [
   "172.31.10.1",
 ]
 tici_worker_private_ips = [
   "172.31.11.1",
 ]
-ssh-center = "ssh ubuntu@<center_vm_ip>"
-tidb-dashboard = "http://<pd_vm_ip>:2379/dashboard"
+url-tidb-dashboard = "http://<pd_vm_ip>:2379/dashboard"
 ```
 
 ### 4. Connect to Center VM and deploy cluster
@@ -99,7 +98,7 @@ tiup mirror set http://localhost:8888
 
 # The topology.yaml is already created for you
 tiup cluster:v1.16.2-feature.fts deploy tidb-test nightly ./topology.yaml --user ubuntu -i ~/.ssh/id_rsa --yes
-tiup cluster:v1.16.2-feature.fts start tidb-test
+tiup cluster start tidb-test
 ```
 
 ### 5. Connect to TiDB

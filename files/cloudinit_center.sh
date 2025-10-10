@@ -3,6 +3,12 @@
 
 sudo -u ubuntu -i <<'EOF'
 
+# install tici-benchmark
+# sudo apt-get update
+# sudo apt-get install -y python3-pip
+# pip3 install mysql-connector-python boto3 tabulate tqdm tomli
+# git clone https://github.com/Lloyd-Pottiger/tici-benchmark.git
+
 # install tiup
 curl --proto '=https' --tlsv1.2 -sSf https://tiup-mirrors.pingcap.com/install.sh | sh
 
