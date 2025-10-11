@@ -1,11 +1,11 @@
-# terraform-up-tidb-aws
+# terraform-tici
 
 A sample to create VMs for deploying TiDB with TiCI in AWS using [Terraform](https://www.terraform.io) with these default topology:
 
 | Usage                                       | Size   | Count | Private IP                  |
 | ------------------------------------------- | ------ | ----- | --------------------------- |
-| TiKV                                        | 8c 64g | 3     | 172.31.6.1, 172.31.6.2, ... |
-| TiDB                                        | 8c 16g | 2     | 172.31.7.1, 172.31.7.2, ... |
+| TiKV                                        | 8c 64g | 1     | 172.31.6.1, 172.31.6.2, ... |
+| TiDB                                        | 8c 16g | 1     | 172.31.7.1, 172.31.7.2, ... |
 | PD + Grafana + Monitoring                   | 8c 16g | 1     | 172.31.8.1                  |
 | TiFlash                                     | 8c 64g | 1     | 172.31.9.1, 172.31.9.2, ... |
 | TiCI-Meta                                   | 8c 16g | 1     | 172.31.10.1                 |
