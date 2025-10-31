@@ -76,7 +76,7 @@ private-ip-tikv = [
   "172.31.6.1",
 ]
 public-DSN = "mysql://root@<center_vm_ip>:4000"
-ssh-center = "ssh -R 8888:tiup.pingcap.net:8988 ubuntu@<center_vm_ip>"
+ssh-center = "ssh ubuntu@<center_vm_ip>"
 tici_meta_private_ips = [
   "172.31.10.1",
 ]
@@ -94,7 +94,7 @@ You can now connect to the center VM and deploy a TiDB cluster in these VMs:
 # ssh to the host
 `terraform output -raw ssh-center`
 
-tiup mirror set http://localhost:8888
+tiup mirror set https://staging.tiup-server.pingcap.net 
 
 # The topology.yaml is already created for you
 tiup cluster:v1.16.2-feature.fts deploy tidb-test nightly ./topology.yaml --user ubuntu -i ~/.ssh/id_rsa --yes
